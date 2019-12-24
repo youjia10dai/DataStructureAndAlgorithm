@@ -62,26 +62,24 @@ public class MyCircleArrayQueueDemo {
     }
 
 }
+
 // 使用数组模拟队列-编写一个ArrayQueue类
 class CircleArray {
 
     private int[] array; // 数组
-    private int front; // 前部的
-    private int rear; // 后面的
+    private int front; // 前部的 默认为0
+    private int rear; // 后面的 默认为0
     private int maxSize; // 表示数组的最大容量
 
     // 创建队列的构造器
     public CircleArray(int arrMaxSize) {
         array = new int[arrMaxSize];
         this.maxSize = arrMaxSize;
-        // 初始值
-        front = -1;
-        rear = -1;
     }
 
     // 判断队列是否满
     public boolean isFull() {
-        return maxSize - 1 == rear;
+        return rear - front == maxSize;
     }
 
     // 判断队列是否为空
@@ -92,10 +90,19 @@ class CircleArray {
     // 添加数据到队列
     public void addQueue(int n) {
         if (!isFull()) {
-            array[++rear] = n;
+            array[rear % maxSize] = n;
+            rear++;
+            if (rear / maxSize == 2)
+                initIndex();
         } else {
             System.out.println("队列已经满了");
         }
+    }
+
+    private void initIndex() {
+        rear = rear - maxSize;
+        front = front -  maxSize;
+        System.out.println("front:" + front + "   rear:" + rear);
     }
 
     // 获取队列的数据, 出队列
@@ -104,7 +111,9 @@ class CircleArray {
             // 通过抛出异常
             throw new RuntimeException("队列空，不能取数据");
         }
-        return array[++front];
+        int value = array[front % maxSize];
+        front++;
+        return value;
     }
 
     // 显示队列的所有数据
@@ -113,8 +122,8 @@ class CircleArray {
             System.out.println("队列空的，没有数据~~");
             return;
         }
-        for (int i = 0; i < array.length; i++) {
-            System.out.println("array[" + i + "]:" + array[i]);
+        for (int i = front; i < rear; i++) {
+            System.out.println("array[" + i % maxSize + "]:" + array[i % maxSize]);
         }
     }
 
@@ -124,6 +133,6 @@ class CircleArray {
             // 通过抛出异常
             throw new RuntimeException("队列空，不能取数据");
         }
-        return array[front + 1];
+        return array[front];
     }
 }
