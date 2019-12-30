@@ -6,7 +6,7 @@ import java.util.Stack;
 /**
  * @Author: chenlj
  * @CreateTime: 2019-12-24 13:15
- * @Description: 实现简单的链表操作
+ * @Description: 单向链表
  */
 public class MySingleLinkedListDemo {
 
