@@ -100,7 +100,6 @@ class MySingleLinkedList<T> {
             }
             temp = temp.getNext();
         }
-        System.out.println("删除失败");
     }
 
     public Node<T> getLastNode() {

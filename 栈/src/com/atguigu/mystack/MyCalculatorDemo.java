@@ -7,13 +7,14 @@ import java.util.regex.Pattern;
 /**
  * @Author: chenlj
  * @CreateTime: 2019-12-31 14:37
- * @Description: 计算器
+ * @Description: 计算器(中位表达计算)
  */
 public class MyCalculatorDemo {
 
     public static void main(String[] args) {
         MyCalculator calculator = new MyCalculator();
-        calculator.compute("711 * 2 * 2 - 5 + 1 - 5 + 3 - 4");
+        int result = calculator.compute("711 * 2 * 2 * 11 - 5 + 1 - 5 + 3 - 4");
+        System.out.println("result = " +result);
 //        calculator.getAllExpressions();
     }
 
@@ -62,7 +63,16 @@ class MyCalculator {
             }
             expression = getNextExpression();
         }
-        return 0;
+        int result = lastCompute();
+        return result;
+    }
+
+    private int lastCompute() {
+        String operator = operatorStack.pop();
+        Integer firstNum = numStack.pop();
+        Integer secondNum = numStack.pop();
+        int result = Operators.compute(secondNum, firstNum, Operators.getOperator(operator));
+        return result;
     }
 
     private void init(String expression) {
@@ -92,8 +102,8 @@ class MyCalculator {
         Integer secondNum = numStack.pop();
         String operatorStr = operatorStack.pop();
         Operators operator = Operators.getOperator(operatorStr);
-        int result = Operators.compute(firstNum, secondNum, operator);
-        //
+        int result = Operators.compute(secondNum, firstNum, operator);
+//        //
         numStack.push(result);
         operatorStack.push(expression);
     }
@@ -181,7 +191,7 @@ enum Type {
     NUMBER,OPERATOR,ERROR;
 
     public static Type getType(String expression) {
-        if(expression.contains("/") || expression.contains("*") || expression.contains("+") || expression.contains("-")) {
+        if(expression.contains("/") || expression.contains("*") || expression.contains("+") || expression.contains("-") || expression.contains("(") || expression.contains(")")) {
             return OPERATOR;
         }
         if(isNumber(expression)) {
