@@ -1,6 +1,7 @@
 package com.atguigu.mystack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -13,7 +14,7 @@ import java.util.Stack;
 public class MyPolandNotation {
 
     private Stack<String> stack = new Stack<String>();
-
+    private Stack<Integer> numStack = new Stack<Integer>();
     private String expression;
 
     private int index = 0;
@@ -31,19 +32,39 @@ public class MyPolandNotation {
 
     public static void main(String[] args) {
         MyPolandNotation calculator = new MyPolandNotation();
-        calculator.compute("((3+5*2)+2)/3+6*2/2+3+1");//15
+        int result = calculator.compute("(30+4)*5-6");//15
+        System.out.println("result = " + result);
     }
 
     public int compute(String expression) {
         // 1.格式化表达式
         init(expression);
-        // 2.解析出表达式
+        // 2.解析出表达式(中缀表达式)
         List<String> infixExpressionList = getExpressionList();
         // 3.将中缀表达式转换为后缀表达式
         List<String> suffixExpressionList = parseSuffixExpressionList(infixExpressionList);
         System.out.println("suffixExpressionList = " + suffixExpressionList);
         // 4.使用后缀表达式进行计算
-        return -1;
+        int result = compute(suffixExpressionList);
+        return result;
+    }
+
+    private int compute(List<String> suffixExpressionList) {
+        for (String express : suffixExpressionList) {
+            Type type = Type.getType(express);
+            switch (type) {
+                case NUMBER:
+                    numStack.push(Integer.parseInt(express));
+                    break;
+                case OPERATOR:
+                    Integer second = numStack.pop();
+                    Integer first = numStack.pop();
+                    int result = Operators.compute(first, second, Operators.getOperator(express));
+                    numStack.push(result);
+                    break;
+            }
+        }
+        return numStack.pop();
     }
 
     //
