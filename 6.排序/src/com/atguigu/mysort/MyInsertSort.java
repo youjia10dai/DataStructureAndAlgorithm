@@ -23,6 +23,7 @@ public class MyInsertSort {
 
     /**
      * 插入排序
+     * 数组数据一个一个插入进去
      * @param array
      */
     private static void insertSort(int[] array) {
